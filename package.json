@@ -1,0 +1,17 @@
+{
+  "name": "api-integration-ts",
+  "version": "1.0.0",
+  "description": "Typed client for a paginated REST API, with retries, timeouts and response validation",
+  "type": "module",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/src/index.js",
+    "test": "npm run build && node --test dist/test/client.test.js"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "^5.9.3"
+  }
+}
