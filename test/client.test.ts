@@ -115,3 +115,27 @@ test("rejects responses with an unexpected shape", async () => {
 
   await assert.rejects(client.getAll(30), /Unexpected response shape/);
 });
+
+test("retries on network errors and then succeeds", async () => {
+  let attempts = 0;
+  const fetchFn: FetchLike = async () => {
+    attempts++;
+    if (attempts < 2) throw new TypeError("fetch failed");
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({
+        products: [{ id: 1, title: "A", price: 1 }],
+        total: 1,
+        skip: 0,
+        limit: 30,
+      }),
+    };
+  };
+  const client = new ProductsClient({ fetchFn, sleep: async () => {} });
+
+  const products = await client.getAll(30);
+
+  assert.equal(products.length, 1);
+  assert.equal(attempts, 2);
+});
